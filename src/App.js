@@ -1,11 +1,14 @@
 import logo from './logo.svg';
 import './App.css';
 import Header from './pages/header/header';
+import Footer from './pages/footer/footer';
+import Pages from './pages';
 
 function App() {
   return (
     <div className="App bg-gray-600">
       <Header/>
+      <Pages/>
         {/* <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
@@ -18,6 +21,7 @@ function App() {
         >
           Learn React
         </a> */}
+        <Footer/>
     </div>
   );
 }
