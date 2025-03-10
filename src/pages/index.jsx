@@ -2,7 +2,7 @@ import React from 'react'
 import "./styles.css"
 const Pages = () => {
   return (
-    <div class="bg-white min-w-[100vw] min-h-[100vh] pages-container">
+    <div class="min-w-[100vw] min-h-[100vh] pages-container">
       
     </div>
   )
