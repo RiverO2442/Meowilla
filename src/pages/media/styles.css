@@ -1,0 +1,30 @@
+/* ul {
+       display: grid;
+       grid-template-columns: repeat(auto-fit, minmax(210px, max-content));
+       grid-gap: 16px;
+       justify-content: center;
+       padding: initial;
+       width: calc(100% - 100px);
+}
+
+li {
+    list-style-type: none;
+    border: 1px solid gray;
+    padding: 5px;
+    width: 210px;
+} */
+
+.media-img{
+    width: calc((100% - 4*6px) / 5);
+}
+
+.footer-container{
+    background-color: #1976d2;
+}
+.media img {
+ list-style-type: none;
+ border: 1px solid gray;
+ padding: 5px;
+ width: 210px;
+ height: 210px;
+}
