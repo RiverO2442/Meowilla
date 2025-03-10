@@ -6,6 +6,8 @@ import { Box } from "@mui/material";
 import Media from "./pages/media/media";
 import Footer from "./pages/footer/footer";
 import ImageDetail from "./pages/media/media-detail/media-detail";
+import SignIn from "./pages/login/login";
+import Register from "./pages/register/register";
 
 const App: React.FC = () => {
   return (
@@ -21,6 +23,8 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Media />} />
             <Route path="/detail/:id" element={<ImageDetail />} />
+            <Route path="/login" element={<SignIn />} />
+            <Route path="/logup" element={<Register />} />
             {/* <Route path="/about" element={<About />} /> */}
           </Routes>
         </div>
