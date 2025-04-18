@@ -1,23 +1,38 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { mediaDetail } from "../../../service/service";
 
 const ImageDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Retrieve the image ID from the URL
-  const tempSrc = "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e";
+  const [media, setMedia] = useState<any>();
+  const handleGetMediaDetail = async () => {
+    try {
+      const data = (await mediaDetail(id)) as any;
+      setMedia(data?.data);
+    } catch (error: any) {
+      alert(`${error.response?.data?.message || "Something went wrong."} `);
+    }
+  };
+
   useEffect(() => {
-    console.log(`Image ID changed to: ${id}`);
-    // Fetch new data or update the UI when `id` changes
-  }, [id]);
+    handleGetMediaDetail();
+  }, []);
+
   return (
-    <div className="p-5">
-      <h1 className="text-2xl font-bold">Image Detail</h1>
-      <p>Displaying details for image ID: {id}</p>
-      <img
-        src={tempSrc}
-        // src={`/images/${id}.jpg`}
-        alt={`Image ${id}`}
-        className="max-w-full h-auto mt-4"
-      />
+    <div className="p-5 flex items-center justify-start flex-col w-full">
+      <h1 className="text-2xl font-bold text-black">
+        {media?.title ?? "Image"}
+      </h1>
+      {media?.url && (
+        <img
+          src={media?.url ?? "/"}
+          alt={`Image ${id}`}
+          className="h-auto mt-4 border border-black object-fit max-w-[1000px] max-h-[1000px]"
+          onError={(e) => {
+            e.currentTarget.src = "public/no-image.png";
+          }}
+        />
+      )}
     </div>
   );
 };

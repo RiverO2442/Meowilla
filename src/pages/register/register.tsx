@@ -7,6 +7,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { message } from "antd";
+import { registerUser } from "../../service/service";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -19,7 +23,21 @@ function Copyright() {
     </Typography>
   );
 }
+
 export default function Register() {
+  const [userEmail, setUserEmail] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+  const onFormSubmit = async () => {
+    try {
+      await registerUser(username, userEmail, userPassword);
+      alert("User registered successfully");
+      navigate("/login");
+    } catch (error: any) {
+      alert(`${error.response?.data?.message || "Something went wrong."} `);
+    }
+  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -41,11 +59,25 @@ export default function Register() {
               margin="normal"
               required
               fullWidth
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
               id="email"
               label="Email Address"
               name="email"
               autoComplete="email"
               autoFocus
+              value={userEmail}
+              onChange={(e) => setUserEmail(e.target.value)}
             />
             <TextField
               variant="outlined"
@@ -57,10 +89,15 @@ export default function Register() {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={userPassword}
+              onChange={(e) => setUserPassword(e.target.value)}
             />
             <div className="flex gap-2">
               <Button
-                type="submit"
+                // type="submit"
+                onClick={() => {
+                  onFormSubmit();
+                }}
                 fullWidth
                 variant="contained"
                 color="primary"

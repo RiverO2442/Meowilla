@@ -9,8 +9,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Avatar } from "antd";
+import { Avatar, message } from "antd";
 import { useNavigate } from "react-router-dom";
+import {
+  googleLogin,
+  loginUser,
+  registerUser,
+  saveSearch,
+} from "../../service/service";
+import { useState } from "react";
 
 function Copyright() {
   return (
@@ -24,8 +31,23 @@ function Copyright() {
     </Typography>
   );
 }
-export default function SignIn() {
+export default function Login() {
   const navigate = useNavigate();
+  const [userEmail, setUserEmail] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      await loginUser(userEmail, userPassword);
+      navigate("/");
+    } catch (error: any) {
+      alert(`${error.response?.data?.message || "Something went wrong."} `);
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    googleLogin();
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -53,6 +75,8 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              value={userEmail}
+              onChange={(e) => setUserEmail(e.target.value)}
             />
             <TextField
               variant="outlined"
@@ -64,22 +88,21 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              value={userPassword}
+              onChange={(e) => setUserPassword(e.target.value)}
             />
             <div className="flex gap-2">
               <Button
-                type="submit"
                 fullWidth
                 variant="contained"
                 color="primary"
+                onClick={() => {
+                  handleLogin();
+                }}
               >
                 Sign In
               </Button>
               <Button
-                type="submit"
                 fullWidth
                 variant="contained"
                 color="primary"
