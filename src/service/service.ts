@@ -81,20 +81,41 @@ export const deleteSearch = async (searchId: number) => {
   }
 };
 
-// Search Media
-export const mediaSearch = async (param: any) => {
+export const imageSearch = async (param: any) => {
   try {
     return await apiClient.get(
-      `/search_images?q=${param.query}&page=${param.page}`
+      `/images?q=${param.query.length > 0 ? param.query : "random"}&page=${
+        param.page
+      }`
     );
   } catch (error) {
     throw error;
   }
 };
 
-export const mediaDetail = async (param: any) => {
+export const imageDetail = async (param: any) => {
   try {
-    return await apiClient.get(`/image_detail/${param}`);
+    return await apiClient.get(`/images/${param}`);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const audioSearch = async (param: any) => {
+  try {
+    return await apiClient.get(
+      `/audios?q=${param.query.length > 0 ? param.query : "random"}&page=${
+        param.page
+      }`
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const audioDetail = async (param: any) => {
+  try {
+    return await apiClient.get(`/audio/${param}`);
   } catch (error) {
     throw error;
   }

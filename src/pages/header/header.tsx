@@ -1,17 +1,15 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Input, Select } from "antd";
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
-import Media from "../media/media";
+import Images from "../media/media-list/images";
 
-export default function Header() {
+export default function Header({ onSearchChange }: any) {
   const navigate = useNavigate();
   const location = useLocation();
   const onLogo = () => {
     navigate(`/`);
   };
-  const onMedia = () => {
-    navigate(`/`);
-  };
+
   const verifyLogin = localStorage.getItem("token") ?? false;
   return (
     <div
@@ -40,18 +38,24 @@ export default function Header() {
                 placeholder="Search media by name"
                 prefix={<SearchOutlined />}
                 allowClear
-                onChange={(e) => {}}
+                onChange={(e) => {
+                  onSearchChange(e?.target?.value);
+                }}
                 onPressEnter={() => {}}
               />
               <Select
+                defaultValue={"image"}
                 placeholder="Type"
                 size="large"
                 style={{ width: 120 }}
-                onChange={() => {}}
+                onChange={(e: any) => {
+                  onSearchChange({
+                    mediaType: e,
+                  });
+                }}
                 options={[
-                  { value: "all", label: "All" },
                   { value: "image", label: "Image" },
-                  { value: "video", label: "Video" },
+                  { value: "audio", label: "Audio" },
                 ]}
               />
             </div>
@@ -125,54 +129,6 @@ export default function Header() {
               </div>
             </div>
           </nav>
-          {/* <nav className="pt-4 pb-6 bg-white border border-gray-200 rounded-md shadow-md lg:hidden">
-            <div className="flow-root">
-              <div className="flex flex-col px-6 -my-2 space-y-1">
-                <a
-                  href="#"
-                  title=""
-                  className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-white focus:text-white"
-                >
-                  Features
-                </a>
-
-                <a
-                  href="#"
-                  title=""
-                  className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-white focus:text-white"
-                >
-                  Solutions
-                </a>
-
-                <a
-                  href="#"
-                  title=""
-                  className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-white focus:text-white"
-                >
-                  Resources
-                </a>
-
-                <a
-                  href="#"
-                  title=""
-                  className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-white focus:text-white"
-                >
-                  Pricing
-                </a>
-              </div>
-            </div>
-
-            <div className="px-6 mt-6">
-              <a
-                href="#"
-                title=""
-                className="inline-flex justify-center px-4 py-3 text-base font-semibold text-blue-600 transition-all duration-200 bg-white border border-transparent rounded-md tems-center hover:bg-blue-700 focus:bg-blue-700"
-                role="button"
-              >
-                Get started now
-              </a>
-            </div>
-          </nav> */}
         </div>
       </header>
     </div>
