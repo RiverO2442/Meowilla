@@ -9,6 +9,12 @@ const apiClient = axios.create({
   },
 });
 
+// 🔁 Restore token after refresh
+const token = localStorage.getItem("token");
+if (token) {
+  apiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+}
+
 // Register User
 export const registerUser = async (
   username: string,
@@ -35,7 +41,6 @@ export const loginUser = async (email: string, password: string) => {
     });
 
     const { token } = response.data;
-
     if (token) {
       localStorage.setItem("token", token);
       apiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -75,7 +80,7 @@ export const saveSearch = async (query: string) => {
 // Delete Recent Search
 export const deleteSearch = async (searchId: number) => {
   try {
-    return await apiClient.delete(`/delete_search/${searchId}`);
+    return await apiClient.delete(`/recent_searches/${searchId}`);
   } catch (error) {
     throw error;
   }

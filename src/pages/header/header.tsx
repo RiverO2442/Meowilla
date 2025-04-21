@@ -1,7 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button, Input, Select } from "antd";
+import { AutoComplete, Button, Input, Select } from "antd";
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
-import Images from "../media/media-list/images";
+import { useEffect, useState } from "react";
+import { fetchRecentSearches, saveSearch } from "../../service/service";
 
 export default function Header({ onSearchChange }: any) {
   const navigate = useNavigate();
@@ -9,8 +10,34 @@ export default function Header({ onSearchChange }: any) {
   const onLogo = () => {
     navigate(`/`);
   };
-
+  const [search, setSearch] = useState("");
+  const [recentSearch, setRecentSearch] = useState();
+  const handleSaveSearchPromp = async () => {
+    try {
+      (await saveSearch(search)) as any;
+      handleGetSearch();
+    } catch (error: any) {
+      alert(`${error.response?.data?.message || "Something went wrong."} `);
+    }
+  };
+  const handleGetSearch = async () => {
+    try {
+      const data = await fetchRecentSearches();
+      setRecentSearch(
+        data?.data?.searches.map((item: any) => {
+          return {
+            value: item.query,
+          };
+        })
+      );
+    } catch (error: any) {
+      alert(`${error.response?.data?.message || "Something went wrong."} `);
+    }
+  };
   const verifyLogin = localStorage.getItem("token") ?? false;
+  useEffect(() => {
+    handleGetSearch();
+  }, []);
   return (
     <div
       className={`"w-full h-auto items-center justify-center"2 ${
@@ -33,16 +60,32 @@ export default function Header({ onSearchChange }: any) {
             <div
               className={`flex gap-2 ${location.pathname !== "/" && "hidden"}`}
             >
-              <Input
-                size="large"
-                placeholder="Search media by name"
-                prefix={<SearchOutlined />}
-                allowClear
-                onChange={(e) => {
-                  onSearchChange(e?.target?.value);
+              <AutoComplete
+                options={recentSearch}
+                onSelect={(e) => {
+                  setSearch(e);
                 }}
-                onPressEnter={() => {}}
-              />
+              >
+                <Input
+                  size="large"
+                  placeholder="Search media by name"
+                  prefix={<SearchOutlined />}
+                  allowClear
+                  onChange={(e: any) => {
+                    setSearch(e?.target?.value);
+                  }}
+                />
+              </AutoComplete>
+              <Button
+                size="large"
+                type="primary"
+                onClick={() => {
+                  handleSaveSearchPromp();
+                  onSearchChange(search);
+                }}
+              >
+                search
+              </Button>
               <Select
                 defaultValue={"image"}
                 placeholder="Type"
