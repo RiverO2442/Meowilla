@@ -1,16 +1,43 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button, Input, Select } from "antd";
+import { AutoComplete, Button, Input, Select } from "antd";
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { fetchRecentSearches, saveSearch } from "../../service/service";
 
-export default function Header() {
+export default function Header({ onSearchChange }: any) {
   const navigate = useNavigate();
   const location = useLocation();
   const onLogo = () => {
     navigate(`/`);
   };
-  const onMedia = () => {
-    navigate(`/`);
+  const [search, setSearch] = useState("");
+  const [recentSearch, setRecentSearch] = useState();
+  const handleSaveSearchPromp = async () => {
+    try {
+      (await saveSearch(search)) as any;
+      handleGetSearch();
+    } catch (error: any) {
+      alert(`${error.response?.data?.message || "Something went wrong."} `);
+    }
   };
+  const handleGetSearch = async () => {
+    try {
+      const data = await fetchRecentSearches();
+      setRecentSearch(
+        data?.data?.searches.map((item: any) => {
+          return {
+            value: item.query,
+          };
+        })
+      );
+    } catch (error: any) {
+      alert(`${error.response?.data?.message || "Something went wrong."} `);
+    }
+  };
+  const verifyLogin = localStorage.getItem("token") ?? false;
+  useEffect(() => {
+    handleGetSearch();
+  }, []);
   return (
     <div
       className={`"w-full h-auto items-center justify-center"2 ${
@@ -33,23 +60,45 @@ export default function Header() {
             <div
               className={`flex gap-2 ${location.pathname !== "/" && "hidden"}`}
             >
-              <Input
+              <AutoComplete
+                options={recentSearch}
+                onSelect={(e) => {
+                  setSearch(e);
+                }}
+              >
+                <Input
+                  size="large"
+                  placeholder="Search media by name"
+                  prefix={<SearchOutlined />}
+                  allowClear
+                  onChange={(e: any) => {
+                    setSearch(e?.target?.value);
+                  }}
+                />
+              </AutoComplete>
+              <Button
                 size="large"
-                placeholder="Search media by name"
-                prefix={<SearchOutlined />}
-                allowClear
-                onChange={(e) => {}}
-                onPressEnter={() => {}}
-              />
+                type="primary"
+                onClick={() => {
+                  handleSaveSearchPromp();
+                  onSearchChange(search);
+                }}
+              >
+                search
+              </Button>
               <Select
+                defaultValue={"image"}
                 placeholder="Type"
                 size="large"
                 style={{ width: 120 }}
-                onChange={() => {}}
+                onChange={(e: any) => {
+                  onSearchChange({
+                    mediaType: e,
+                  });
+                }}
                 options={[
-                  { value: "all", label: "All" },
                   { value: "image", label: "Image" },
-                  { value: "video", label: "Video" },
+                  { value: "audio", label: "Audio" },
                 ]}
               />
             </div>
@@ -66,96 +115,63 @@ export default function Header() {
                   stroke="currentColor"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M4 8h16M4 16h16"
                   />
                 </svg>
                 <svg
-                  className="hidden w-6 h-6"
+                  className="w-6 h-6"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
               </button>
-              <div className="hidden lg:flex lg:items-center lg:ml-auto lg:space-x-10">
-                <a
-                  href="/"
-                  title=""
-                  className="text-base font-medium text-black transition-all duration-200 hover:text-white focus:text-white"
-                >
-                  <p className="text-white hover:text-blue-900 focus:text-blue-900">
-                    Media
-                  </p>
-                </a>
+              <div className="flex gap-2 justify-center items-start">
+                <div>
+                  <a
+                    href="/"
+                    title=""
+                    className="items-center justify-center px-4 py-3 text-base font-semibold transition-all duration-200 bg-blue-500 border border-transparent rounded-md lg:inline-flex hover:bg-blue-700 focus:bg-blue-700 hover:text-blue-900 focus:text-blue-900"
+                  >
+                    <p className="text-white">Media</p>
+                  </a>
+                </div>
+                <div className={`${verifyLogin && "hidden"}`}>
+                  <a
+                    href="/login"
+                    title=""
+                    className={`"items-center justify-center px-4 py-3 text-base font-semibold transition-all duration-200 bg-blue-500 border border-transparent rounded-md lg:inline-flex hover:bg-blue-700 focus:bg-blue-700 hover:text-blue-900 focus:text-blue-900"`}
+                    role="button"
+                  >
+                    <p className="text-white">Login</p>
+                  </a>
+                </div>
+                <div className={`${!verifyLogin && "hidden"}`}>
+                  <a
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      navigate("/login");
+                    }}
+                    title=""
+                    className={`"items-center justify-center px-4 py-3 text-base font-semibold transition-all duration-200 bg-blue-500 border border-transparent rounded-md lg:inline-flex hover:bg-blue-700 focus:bg-blue-700 hover:text-blue-900 focus:text-blue-900"`}
+                    role="button"
+                  >
+                    <p className="text-white">Logout</p>
+                  </a>
+                </div>
               </div>
-              <a
-                href="#"
-                title=""
-                className="items-center justify-center hidden px-4 py-3 ml-10 text-base font-semibold  transition-all duration-200 bg-blue-500 border border-transparent rounded-md lg:inline-flex hover:bg-blue-700 focus:bg-blue-700 hover:text-blue-900 focus:text-blue-900"
-                role="button"
-              >
-                <p className="text-white">Login</p>
-              </a>
             </div>
           </nav>
-          {/* <nav className="pt-4 pb-6 bg-white border border-gray-200 rounded-md shadow-md lg:hidden">
-            <div className="flow-root">
-              <div className="flex flex-col px-6 -my-2 space-y-1">
-                <a
-                  href="#"
-                  title=""
-                  className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-white focus:text-white"
-                >
-                  Features
-                </a>
-
-                <a
-                  href="#"
-                  title=""
-                  className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-white focus:text-white"
-                >
-                  Solutions
-                </a>
-
-                <a
-                  href="#"
-                  title=""
-                  className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-white focus:text-white"
-                >
-                  Resources
-                </a>
-
-                <a
-                  href="#"
-                  title=""
-                  className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-white focus:text-white"
-                >
-                  Pricing
-                </a>
-              </div>
-            </div>
-
-            <div className="px-6 mt-6">
-              <a
-                href="#"
-                title=""
-                className="inline-flex justify-center px-4 py-3 text-base font-semibold text-blue-600 transition-all duration-200 bg-white border border-transparent rounded-md tems-center hover:bg-blue-700 focus:bg-blue-700"
-                role="button"
-              >
-                Get started now
-              </a>
-            </div>
-          </nav> */}
         </div>
       </header>
     </div>
