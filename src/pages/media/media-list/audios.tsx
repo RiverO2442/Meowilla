@@ -1,8 +1,8 @@
-import "../styles.css";
 import { Pagination } from "antd";
-import { useNavigate } from "react-router-dom";
-import { audioSearch, imageSearch } from "../../../service/service";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { audioSearch } from "../../../service/service";
+import "../styles.css";
 
 type Pagination = {
   cunrrentPage: number;
@@ -58,7 +58,7 @@ export default function Audios({ headerParams }: any) {
                 alt={item.title}
                 loading="lazy"
                 onError={(e) => {
-                  e.currentTarget.src = "public/no-image.png";
+                  e.currentTarget.src = "/no-image.png";
                 }}
               />
               <div className="text-black">{item?.title}</div>
