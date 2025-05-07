@@ -1,19 +1,14 @@
-import "./App.css";
-import Header from "./pages/header/header";
-import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
 import { Box } from "@mui/material";
+import React, { useState } from "react";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import "./App.css";
 import Footer from "./pages/footer/footer";
-import ImageDetail from "./pages/media/media-detail/image-detail";
+import Header from "./pages/header/header";
 import SignIn from "./pages/login/login";
-import Register from "./pages/register/register";
 import Media from "./pages/media/media";
 import AudioDetail from "./pages/media/media-detail/audio-detail";
+import ImageDetail from "./pages/media/media-detail/image-detail";
+import Register from "./pages/register/register";
 import ProtectedRoute from "./utility/ProtectedRoute";
 
 const App: React.FC = () => {
