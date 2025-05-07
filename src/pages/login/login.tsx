@@ -7,7 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import { googleLogin, loginUser } from "../../service/service";
 import { loginUser } from "../../service/service";
@@ -37,6 +37,10 @@ export default function Login() {
       alert(`${error.response?.data?.message || "Something went wrong."} `);
     }
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) navigate("/");
+  }, []);
 
   // const handleGoogleLogin = () => {
   //   googleLogin();

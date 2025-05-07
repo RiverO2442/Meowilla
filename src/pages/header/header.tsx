@@ -1,7 +1,12 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { AutoComplete, Button, Input, Select } from "antd";
 import { useEffect, useState } from "react";
-import { fetchRecentSearches, saveSearch } from "../../service/service";
+import {
+  deleteSearch,
+  fetchRecentSearches,
+  saveSearch,
+} from "../../service/service";
+import { CloseOutlined, SearchOutlined } from "@ant-design/icons";
 
 export default function Header({ onSearchChange }: any) {
   const navigate = useNavigate();
@@ -16,7 +21,19 @@ export default function Header({ onSearchChange }: any) {
       (await saveSearch(search)) as any;
       handleGetSearch();
     } catch (error: any) {
-      alert(`${error.response?.data?.message || "Something went wrong."} `);
+      console.log(
+        `${error.response?.data?.message || "Something went wrong."} `
+      );
+    }
+  };
+  const handleDeleteSearchPromp = async (id: any) => {
+    try {
+      (await deleteSearch(id)) as any;
+      handleGetSearch();
+    } catch (error: any) {
+      console.log(
+        `${error.response?.data?.message || "Something went wrong."} `
+      );
     }
   };
   const handleGetSearch = async () => {
@@ -25,12 +42,15 @@ export default function Header({ onSearchChange }: any) {
       setRecentSearch(
         data?.data?.searches.map((item: any) => {
           return {
+            key: item.id,
             value: item.query,
           };
         })
       );
     } catch (error: any) {
-      alert(`${error.response?.data?.message || "Something went wrong."} `);
+      console.log(
+        `${error.response?.data?.message || "Something went wrong."} `
+      );
     }
   };
   const verifyLogin = localStorage.getItem("token") ?? false;
@@ -64,11 +84,38 @@ export default function Header({ onSearchChange }: any) {
                 onSelect={(e) => {
                   setSearch(e);
                 }}
+                optionRender={(option) => {
+                  return (
+                    <span
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span>{option?.value}</span>
+                      <Button
+                        danger
+                        size="small"
+                        type="text"
+                        icon={<CloseOutlined />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteSearchPromp(option.key);
+                          setRecentSearch((prev: any) =>
+                            prev.filter(
+                              (item: any) => item.value !== option.value
+                            )
+                          );
+                        }}
+                      />
+                    </span>
+                  );
+                }}
               >
                 <Input
                   size="large"
                   placeholder="Search media by name"
-                  // prefix={<SearchOutlined />}
+                  prefix={<SearchOutlined />}
                   allowClear
                   onChange={(e: any) => {
                     setSearch(e?.target?.value);
