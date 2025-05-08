@@ -59,7 +59,7 @@ export default function Header({ onSearchChange }: any) {
   const verifyLogin = localStorage.getItem("token") ?? false;
   useEffect(() => {
     handleGetSearch();
-  }, []);
+  });
   return (
     <div
       className={`"w-full h-auto items-center justify-center"2 ${
