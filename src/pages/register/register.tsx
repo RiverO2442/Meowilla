@@ -93,7 +93,6 @@ export default function Register() {
             />
             <div className="flex gap-2">
               <Button
-                // type="submit"
                 onClick={() => {
                   onFormSubmit();
                 }}
@@ -102,6 +101,16 @@ export default function Register() {
                 color="primary"
               >
                 Register
+              </Button>
+              <Button
+                onClick={() => {
+                  navigate("/login");
+                }}
+                fullWidth
+                variant="contained"
+                color="primary"
+              >
+                Back to Login
               </Button>
             </div>
           </form>

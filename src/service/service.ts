@@ -1,7 +1,6 @@
 import axios from "axios";
 
-// const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
-const API_BASE_URL: string = "https://meowilla-be.onrender.com";
+const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -10,7 +9,6 @@ const apiClient = axios.create({
   },
 });
 
-// 🔁 Restore token after refresh
 const token = localStorage.getItem("token");
 if (token) {
   apiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -29,7 +27,7 @@ export const registerUser = async (
       password,
     });
   } catch (error) {
-    throw error; // Propagate error to the component
+    throw error;
   }
 };
 
@@ -49,11 +47,11 @@ export const loginUser = async (email: string, password: string) => {
 
     return response.data;
   } catch (error) {
-    throw error; // Propagate error to the component
+    throw error;
   }
 };
 
-// Google Login — no try/catch since it redirects, but no issue here.
+// Google Login
 export const googleLogin = async () => {
   window.location.href = `${API_BASE_URL}/auth/login`;
 };

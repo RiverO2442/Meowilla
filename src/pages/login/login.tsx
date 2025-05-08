@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import { googleLogin, loginUser } from "../../service/service";
-import { loginUser } from "../../service/service";
+import { googleLogin, loginUser } from "../../service/service";
 
 function Copyright() {
   return (
@@ -42,9 +42,9 @@ export default function Login() {
     if (localStorage.getItem("token")) navigate("/");
   }, []);
 
-  // const handleGoogleLogin = () => {
-  //   googleLogin();
-  // };
+  const handleGoogleLogin = () => {
+    googleLogin();
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -59,7 +59,7 @@ export default function Login() {
             className="w-auto h-16 min-w-50 cursor-pointer"
           />
           <Typography component="h1" variant="h5">
-            Sign in
+            Login
           </Typography>
           <form className={`w-full mt-1`} noValidate>
             <TextField
@@ -88,27 +88,42 @@ export default function Login() {
               value={userPassword}
               onChange={(e) => setUserPassword(e.target.value)}
             />
-            <div className="flex gap-2">
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  handleLogin();
-                }}
-              >
-                Sign In
-              </Button>
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  navigate("/logup");
-                }}
-              >
-                Sign Up
-              </Button>
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-2">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    handleLogin();
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    navigate("/logup");
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </div>
+              <div className="flex">
+                <Button
+                  disabled
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    handleGoogleLogin();
+                  }}
+                >
+                  Google Login
+                </Button>
+              </div>
             </div>
           </form>
         </div>

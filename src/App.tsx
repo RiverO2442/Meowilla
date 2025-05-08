@@ -34,8 +34,9 @@ const App: React.FC = () => {
   };
 
   function Authentication() {
-    const token = localStorage.getItem("token") || "";
-    return token.length > 0;
+    // const token = localStorage.getItem("token") || "";
+    // return token.length > 0;
+    return true;
   }
 
   return (
