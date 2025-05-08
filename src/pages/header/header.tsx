@@ -15,7 +15,7 @@ export default function Header({ onSearchChange }: any) {
     navigate(`/`);
   };
   const [search, setSearch] = useState("");
-  const [recentSearch, setRecentSearch] = useState();
+  const [recentSearch, setRecentSearch] = useState<any>();
   const handleSaveSearchPromp = async () => {
     try {
       (await saveSearch(search)) as any;
@@ -39,14 +39,17 @@ export default function Header({ onSearchChange }: any) {
   const handleGetSearch = async () => {
     try {
       const data = await fetchRecentSearches();
-      setRecentSearch(
-        data?.data?.searches.map((item: any) => {
-          return {
-            key: item.id,
-            value: item.query,
-          };
-        })
-      );
+      if (data?.data?.searches?.length == 0) {
+        setRecentSearch([]);
+      } else
+        setRecentSearch(
+          data?.data?.searches.map((item: any) => {
+            return {
+              key: item.id,
+              value: item.query,
+            };
+          })
+        );
     } catch (error: any) {
       console.log(
         `${error.response?.data?.message || "Something went wrong."} `
